@@ -4,7 +4,7 @@ A polished, full-stack market tracker: search any US stock or ETF, view live quo
 interactive historical chart, scan a sector heatmap and top movers, read company news,
 compare tickers, and keep a persisted watchlist.
 
-![CI](https://github.com/REPLACE_ME/tickr/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/gitkaarma/tickr/actions/workflows/ci.yml/badge.svg)
 
 > **Live demo:** _add your Vercel URL here after deploying (Phase 8)._
 >
