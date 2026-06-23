@@ -1,7 +1,7 @@
-# Render Blueprint: provisions the Spring Boot API (Docker) + a Redis cache together.
-# The database is Neon (external) — its connection details are set as env vars below.
-# Create via Render → New → Blueprint → connect this repo. Render prompts for every
-# `sync: false` secret (API keys, DB creds, CORS origin).
+# Render Blueprint: provisions the Spring Boot API (Docker).
+# The database is Neon (external); caching is in-memory on the instance.
+# Create via Render -> New -> Blueprint -> connect this repo. Render prompts for every
+# `sync: false` secret (API keys, DB credentials, CORS origin).
 services:
   - type: web
     name: tickr-api
@@ -27,15 +27,3 @@ services:
         sync: false
       - key: CORS_ORIGINS
         sync: false
-      - key: REDIS_URL
-        fromService:
-          name: tickr-redis
-          type: redis
-          property: connectionString
-
-  - type: redis
-    name: tickr-redis
-    plan: free
-    region: oregon
-    ipAllowList: []
-    maxmemoryPolicy: allkeys-lru
