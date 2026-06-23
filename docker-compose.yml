@@ -1,0 +1,39 @@
+# Optional local infrastructure for reviewers who have Docker.
+# The default `local` Spring profile needs NONE of this (it uses H2 + in-memory cache).
+# To run the backend against this stack instead:
+#
+#   docker compose up -d
+#   SPRING_PROFILES_ACTIVE=prod \
+#   DATABASE_URL=jdbc:postgresql://localhost:5432/tickr \
+#   DATABASE_USERNAME=tickr DATABASE_PASSWORD=tickr \
+#   REDIS_URL=redis://localhost:6379 \
+#   ./backend/mvnw -f backend/pom.xml spring-boot:run
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tickr
+      POSTGRES_USER: tickr
+      POSTGRES_PASSWORD: tickr
+    ports:
+      - "5432:5432"
+    volumes:
+      - tickr_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tickr"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  tickr_pgdata:

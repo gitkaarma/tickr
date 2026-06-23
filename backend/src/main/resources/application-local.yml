@@ -1,0 +1,24 @@
+# Local development profile: zero external services required.
+# In-memory H2 database + in-memory (simple) cache. Run with: ./mvnw spring-boot:run
+spring:
+  datasource:
+    url: jdbc:h2:mem:tickr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  cache:
+    type: simple
+
+# Redis is on the classpath but unused locally; skip its health probe so /actuator/health stays UP.
+management:
+  health:
+    redis:
+      enabled: false

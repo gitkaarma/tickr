@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* Dark-only "fintech terminal" theme. Tokens are exposed as Tailwind colors,
+   so utilities like bg-background, text-foreground, text-up, border-border work. */
+@theme {
+  --color-background: #0a0c10;
+  --color-foreground: #e8eaf0;
+
+  --color-card: #13161d;
+  --color-card-foreground: #e8eaf0;
+
+  --color-popover: #161a22;
+  --color-popover-foreground: #e8eaf0;
+
+  --color-primary: #13e0a4;
+  --color-primary-foreground: #04140f;
+
+  --color-secondary: #1d2430;
+  --color-secondary-foreground: #e8eaf0;
+
+  --color-muted: #161a22;
+  --color-muted-foreground: #8b92a3;
+
+  --color-accent: #1d2430;
+  --color-accent-foreground: #e8eaf0;
+
+  --color-border: #232834;
+  --color-input: #2a3140;
+  --color-ring: #13e0a4;
+
+  /* Market direction */
+  --color-up: #16c784;
+  --color-up-soft: rgba(22, 199, 132, 0.14);
+  --color-down: #ea3943;
+  --color-down-soft: rgba(234, 57, 67, 0.14);
+
+  --color-destructive: #ea3943;
+  --color-destructive-foreground: #ffffff;
+
+  --radius: 0.75rem;
+
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  /* Tabular figures for prices so digits don't jitter as values tick. */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Subtle, themed scrollbars to match the terminal aesthetic. */
+@layer utilities {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 9999px;
+  }
+}
