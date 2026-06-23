@@ -6,9 +6,10 @@ compare tickers, and keep a persisted watchlist.
 
 ![CI](https://github.com/gitkaarma/tickr/actions/workflows/ci.yml/badge.svg)
 
-> **Live demo:** _add your Vercel URL here after deploying (Phase 8)._
+> **Live demo: https://tickr-kappa.vercel.app**
 >
-> _Screenshots live in `docs/screenshots/` — add a hero shot once deployed._
+> The API runs on a free tier that sleeps when idle, so the first load after a while can take
+> 30-60s to wake (the app shows a "waking up" banner). After that it is snappy.
 
 ---
 
@@ -32,8 +33,8 @@ compare tickers, and keep a persisted watchlist.
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, Recharts, TanStack Query, React Router |
 | Backend | Spring Boot 3 (Java 21), Spring Web, Spring Cache, Spring Data JPA, Resilience4j, springdoc/OpenAPI |
 | Data | [Twelve Data](https://twelvedata.com/) (search, charts) · [Finnhub](https://finnhub.io/) (quotes, news, fundamentals) |
-| Storage | Redis (response cache) · Postgres (watchlist) |
-| Hosting | Vercel (web) · Render (API) · Upstash (Redis) · Neon (Postgres) |
+| Storage | Postgres (watchlist) · in-memory response cache (Redis-ready in the code) |
+| Hosting | Vercel (web) · Render (API) · Neon (Postgres) |
 | Quality | JUnit 5 · WireMock · Vitest · Testing Library · GitHub Actions |
 
 ## Architecture
@@ -41,7 +42,7 @@ compare tickers, and keep a persisted watchlist.
 ```mermaid
 flowchart LR
   B[Browser · React SPA] -->|HTTPS| API[Spring Boot BFF]
-  API --> R[(Redis cache)]
+  API --> R[(Response cache)]
   API --> P[(Postgres · watchlist)]
   API --> TD[Twelve Data]
   API --> FH[Finnhub]
@@ -60,8 +61,9 @@ split by their strengths:
   heatmap, movers, watchlist.
 - **Twelve Data (800 req/day)** powers **search, charts and compare** — low-volume,
   on-demand, long-cached.
-- **Redis caching** with per-endpoint TTLs (quotes 60s, history 6h, news 15m, search 1h)
-  collapses bursts of requests into very few upstream calls.
+- **Response caching** with per-endpoint TTLs (quotes 60s, history 6h, news 15m, search 1h)
+  collapses bursts of requests into very few upstream calls. In-memory on a single instance;
+  swap to Redis for multi-instance via the included config.
 - **Resilience4j** adds a light retry + timeout so a transient upstream blip doesn't fail a
   request, and every failure maps to a typed JSON error the UI can reason about.
 
